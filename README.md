@@ -1,4 +1,17 @@
 # ICT12367_movie_review_project 🎬 
+### login
+![หน้า Home](assets/screenshot_sign.png)
+หน้าเข้าสู่ระบบ (Login Page)
+- แบบฟอร์มเข้าสู่ระบบสำหรับผู้ใช้ที่มีบัญชีแล้ว
+- ช่องกรอกชื่อผู้ใช้ (Username) และรหัสผ่าน (Password)
+- ปุ่มเข้าสู่ระบบ
+
+### Sign
+![หน้า Home](assets/screenshot_form.png)
+หน้าสมัครสมาชิก (Signup Page)
+- แบบฟอร์มสำหรับลงทะเบียนผู้ใช้งานใหม่
+- ฟิลด์กรอกข้อมูล เช่น ชื่อผู้ใช้, รหัสผ่าน และอีเมล
+- ปุ่มสมัครสมาชิก
 
 ### Home
 ![หน้า Home](assets/Screenshot_home1.png)
