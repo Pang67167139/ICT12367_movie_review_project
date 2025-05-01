@@ -1,0 +1,30 @@
+{% extends "reviews/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}เข้าสู่ระบบ{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2>เข้าสู่ระบบ</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            {{ form|crispy }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">เข้าสู่ระบบ</button>
+                        </div>
+                    </form>
+                    <div class="border-top pt-3">
+                        <small class="text-muted">
+                            ยังไม่มีบัญชี? <a class="ml-2" href="{% url 'register' %}">สมัครสมาชิกที่นี่</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

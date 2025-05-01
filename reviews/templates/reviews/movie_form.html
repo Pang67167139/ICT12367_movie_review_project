@@ -1,0 +1,22 @@
+{% extends "reviews/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.id %}แก้ไขภาพยนตร์{% else %}เพิ่มภาพยนตร์ใหม่{% endif %}{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h2>{% if form.instance.id %}แก้ไขภาพยนตร์{% else %}เพิ่มภาพยนตร์ใหม่{% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">บันทึก</button>
+                    <a class="btn btn-secondary" href="{% url 'home' %}">ยกเลิก</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

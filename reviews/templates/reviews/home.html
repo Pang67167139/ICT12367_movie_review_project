@@ -1,0 +1,131 @@
+{% extends "reviews/base.html" %}
+{% block title %}หน้าแรก{% endblock %}
+{% block content %}
+<div class="hero-section text-center">
+    <h1 class="hero-title">ยินดีต้อนรับสู่ Movie Reviews</h1>
+    <p class="hero-subtitle">ค้นพบและแชร์รีวิวภาพยนตร์ที่คุณชื่นชอบ</p>
+    {% if user.is_authenticated %}
+        {% if perms.reviews.add_movie or user.is_superuser %}
+            <a href="{% url 'movie-create' %}" class="btn btn-primary btn-lg">เพิ่มภาพยนตร์ใหม่</a>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">เข้าสู่ระบบเพื่อเขียนรีวิว</a>
+    {% endif %}
+</div>
+<div id="search-section" class="mb-5">
+    <div class="card">
+        <div class="card-header bg-warning text-white">
+            <h3 class="mb-0"><i class="fas fa-search mr-2"></i>ค้นหาภาพยนตร์</h3>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="{% url 'home' %}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="title">ชื่อภาพยนตร์</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="ชื่อภาพยนตร์" value="{{ request.GET.title }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="director">ผู้กำกับ</label>
+                            <input type="text" class="form-control" id="director" name="director" placeholder="ผู้กำกับ" value="{{ request.GET.director }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="genre">ประเภท</label>
+                            <input type="text" class="form-control" id="genre" name="genre" placeholder="ประเภท" value="{{ request.GET.genre }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="year">ปีที่ฉาย</label>
+                            <input type="number" class="form-control" id="year" name="year" placeholder="ปี" value="{{ request.GET.year }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search mr-2"></i>ค้นหา</button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary ml-2">ล้างการค้นหา</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% if request.GET %}
+<div class="mb-4">
+    <h4>ผลการค้นหา{% if search_query %}: {{ search_query }}{% endif %}</h4>
+    {% if movies %}
+        <p>พบ {{ movies|length }} รายการ</p>
+    {% else %}
+        <div class="alert alert-info">ไม่พบภาพยนตร์ที่ตรงกับเงื่อนไขการค้นหา</div>
+    {% endif %}
+</div>
+{% else %}
+    <h2 class="mb-4">ภาพยนตร์ล่าสุด</h2>
+{% endif %}
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <img src="{{ movie.poster.url }}" class="card-img-top movie-poster" alt="{{ movie.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title movie-title">{{ movie.title }}</h5>
+                        <p class="card-text movie-info">
+                            <span class="mr-2"><i class="fas fa-film"></i> {{ movie.director }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ movie.release_year }}</span>
+                        </p>
+                        <div class="mt-2">
+                            {% with review_count=movie.reviews.count %}
+                                {% if review_count > 0 %}
+                                    <div class="rating">
+                                        {% with avg_rating=movie.reviews.all|dictsort:"rating"|last %}
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= avg_rating.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <small>{{ review_count }} รีวิว</small>
+                                {% else %}
+                                    <small>ยังไม่มีรีวิว</small>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <a href="{% url 'movie-detail' movie.id %}" class="btn btn-primary btn-sm mt-3">ดูรายละเอียด</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">ยังไม่มีภาพยนตร์ในระบบ</div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="pagination mt-4">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary mr-2" href="?page=1">หน้าแรก</a>
+                <a class="btn btn-outline-primary mr-2" href="?page={{ page_obj.previous_page_number }}">ก่อนหน้า</a>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-primary mr-2" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-primary mr-2" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-primary mr-2" href="?page={{ page_obj.next_page_number }}">ถัดไป</a>
+                <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}">หน้าสุดท้าย</a>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

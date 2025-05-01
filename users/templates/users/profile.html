@@ -1,0 +1,42 @@
+{% extends "reviews/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}โปรไฟล์{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>โปรไฟล์ของ {{ user.username }}</h3>
+                </div>
+                <div class="card-body text-center">
+                    <img class="rounded-circle account-img mb-3" src="{{ user.profile.get_image_url }}" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4>{{ user.username }}</h4>
+                    <p>{{ user.email }}</p>
+                    {% if user.profile.bio %}
+                        <p>{{ user.profile.bio }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>แก้ไขโปรไฟล์</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">ข้อมูลบัญชี</legend>
+                            {{ u_form|crispy }}
+                            {{ p_form|crispy }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">อัปเดต</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
