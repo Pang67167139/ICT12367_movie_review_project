@@ -1,5 +1,12 @@
 # ICT12367_movie_review_project
 # 🎬 Movie Review Web App
+## 📸 ตัวอย่างหน้าจอ
+
+### หน้า Home
+![หน้า Home](assets/screenshot_home.png)
+
+### หน้ารายละเอียดหนัง
+![หน้ารายละเอียด](assets/screenshot_detail.png)
 
 เว็บแอปพลิเคชันสำหรับเพิ่ม ดู แก้ไข และเขียนรีวิวเกี่ยวกับหนัง  
 สร้างด้วย Django และใช้ HTML Template แบบแบ่งหน้า
